@@ -51,6 +51,7 @@ import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
 import fr.paris.lutece.portal.util.mvc.xpage.annotations.Controller;
+import fr.paris.lutece.portal.web.l10n.LocaleService;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
@@ -62,6 +63,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -140,7 +142,7 @@ public class SubscribeApp extends MVCApplication
                             subscription.getSubscriptionKey( ), subscription.getIdSubscribedResource( ) ) );
                     subscriptionDTO.setHtmlSubscription( providerService.getSubscriptionHtmlDescriptionBis( user,
                             subscription.getSubscriptionKey( ), subscription.getIdSubscribedResource( ),
-                            request.getLocale( ),subscription.getIdSubscribedResource() ) );
+                            getStaticLocale( request ),subscription.getIdSubscribedResource() ) );
                     listSubscriptionDto.add( subscriptionDTO );
                 }
 
@@ -148,7 +150,7 @@ public class SubscribeApp extends MVCApplication
                 model.put( MARK_LIST_SUBSCRIPTION_DTO, listSubscriptionDto );
 
                 HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_SUBSCRIPTION,
-                        request.getLocale( ), model );
+                		getStaticLocale( request ), model );
 
                 return template.getHtml( );
             }
@@ -236,5 +238,16 @@ public class SubscribeApp extends MVCApplication
 
         redirect( request, strUrl );
         return new XPage( );
+    }
+    /**
+     * Default getStaticLocale() implementation. Could be overriden
+     * 
+     * @param request
+     *            The HTTP request
+     * @return The Locale
+     */
+    public static Locale getStaticLocale( HttpServletRequest request )
+    {
+        return LocaleService.getContextUserLocale( request );
     }
 }
