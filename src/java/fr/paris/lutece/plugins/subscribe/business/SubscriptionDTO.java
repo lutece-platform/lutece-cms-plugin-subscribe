@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,6 +45,7 @@ public class SubscriptionDTO
 
     /**
      * Get the id of the subscription described by this DTO
+     * 
      * @return The id of the subscription described by this DTO
      */
     public int getIdSubscription( )
@@ -54,7 +55,9 @@ public class SubscriptionDTO
 
     /**
      * Set the id of the subscription described by this DTO
-     * @param nIdSubscription The id of the subscription described by this DTO
+     * 
+     * @param nIdSubscription
+     *            The id of the subscription described by this DTO
      */
     public void setIdSubscription( int nIdSubscription )
     {
@@ -63,6 +66,7 @@ public class SubscriptionDTO
 
     /**
      * Get the HTML description of the subscription
+     * 
      * @return The HTML description of the subscription
      */
     public String getHtmlSubscription( )
@@ -72,7 +76,9 @@ public class SubscriptionDTO
 
     /**
      * Set the HTML description of the subscription
-     * @param strHtmlSubscription The HTML description of the subscription
+     * 
+     * @param strHtmlSubscription
+     *            The HTML description of the subscription
      */
     public void setHtmlSubscription( String strHtmlSubscription )
     {
@@ -81,6 +87,7 @@ public class SubscriptionDTO
 
     /**
      * Check if the subscription is removable
+     * 
      * @return True if the subscription is removable, false otherwise
      */
     public boolean getRemovable( )
@@ -90,7 +97,9 @@ public class SubscriptionDTO
 
     /**
      * Set the subscription removable
-     * @param bRemovable True if the subscription is removable, false otherwise
+     * 
+     * @param bRemovable
+     *            True if the subscription is removable, false otherwise
      */
     public void setRemovable( boolean bRemovable )
     {
@@ -99,6 +108,7 @@ public class SubscriptionDTO
 
     /**
      * Get the URL to modify
+     * 
      * @return The URL to modify the subscription
      */
     public String getUrlModify( )
@@ -108,7 +118,9 @@ public class SubscriptionDTO
 
     /**
      * Set the URL to modify
-     * @param strUrlModify The URL to modify the subscription
+     * 
+     * @param strUrlModify
+     *            The URL to modify the subscription
      */
     public void setUrlModify( String strUrlModify )
     {

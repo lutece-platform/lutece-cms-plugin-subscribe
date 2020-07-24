@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@
  *
  * License 1.0
  */
-
 package fr.paris.lutece.plugins.subscribe.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -43,7 +42,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-
 /**
  * This class provides Data Access methods for Subscription objects
  */
@@ -54,8 +52,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     // Constants
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id_subscription ) FROM subscribe_subscription";
     private static final String SQL_QUERY_SELECT = " SELECT id_subscription, id_user, subscription_provider, subscription_key, id_subscribed_resource FROM subscribe_subscription ";
-    private static final String SQL_QUERY_SELECT_FROM_SUBSCRIPTION_ID = SQL_QUERY_SELECT
-            + " WHERE id_subscription = ? ";
+    private static final String SQL_QUERY_SELECT_FROM_SUBSCRIPTION_ID = SQL_QUERY_SELECT + " WHERE id_subscription = ? ";
     private static final String SQL_QUERY_INSERT = "INSERT INTO subscribe_subscription ( id_subscription, id_user, subscription_provider, subscription_key, id_subscribed_resource ) VALUES ( ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM subscribe_subscription WHERE id_subscription = ? ";
     private static final String SQL_QUERY_UPDATE = "UPDATE subscribe_subscription SET id_user = ?, subscription_provider = ?, subscription_key = ?, id_subscribed_resource = ? WHERE id_subscription = ?";
@@ -70,22 +67,26 @@ public final class SubscriptionDAO implements ISubscriptionDAO
 
     /**
      * Get a new primary key
-     * @param plugin The plugin
+     * 
+     * @param plugin
+     *            The plugin
      * @return The new primary key
      */
     private int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery( );
-
-        int nKey = 1;
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            nKey = daoUtil.getInt( 1 ) + 1;
-        }
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
-        return nKey;
+            int nKey = 1;
+            if ( daoUtil.next( ) )
+            {
+                nKey = daoUtil.getInt( 1 ) + 1;
+            }
+
+            daoUtil.free( );
+            return nKey;
+        }
     }
 
     /**
@@ -94,18 +95,20 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     @Override
     public synchronized void insert( Subscription subscription, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
 
-        subscription.setIdSubscription( newPrimaryKey( plugin ) );
+            subscription.setIdSubscription( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, subscription.getIdSubscription( ) );
-        daoUtil.setString( 2, subscription.getUserId( ) );
-        daoUtil.setString( 3, subscription.getSubscriptionProvider( ) );
-        daoUtil.setString( 4, subscription.getSubscriptionKey( ) );
-        daoUtil.setString( 5, subscription.getIdSubscribedResource( ) );
+            daoUtil.setInt( 1, subscription.getIdSubscription( ) );
+            daoUtil.setString( 2, subscription.getUserId( ) );
+            daoUtil.setString( 3, subscription.getSubscriptionProvider( ) );
+            daoUtil.setString( 4, subscription.getSubscriptionKey( ) );
+            daoUtil.setString( 5, subscription.getIdSubscribedResource( ) );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
@@ -114,24 +117,26 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     @Override
     public Subscription load( int nId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_FROM_SUBSCRIPTION_ID, plugin );
-        daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery( );
-
-        Subscription subscription = null;
-
-        if ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_FROM_SUBSCRIPTION_ID, plugin ) )
         {
-            subscription = new Subscription( );
-            subscription.setIdSubscription( daoUtil.getInt( 1 ) );
-            subscription.setUserId( daoUtil.getString( 2 ) );
-            subscription.setSubscriptionProvider( daoUtil.getString( 3 ) );
-            subscription.setSubscriptionKey( daoUtil.getString( 4 ) );
-            subscription.setIdSubscribedResource( daoUtil.getString( 5 ) );
-        }
+            daoUtil.setInt( 1, nId );
+            daoUtil.executeQuery( );
 
-        daoUtil.free( );
-        return subscription;
+            Subscription subscription = null;
+
+            if ( daoUtil.next( ) )
+            {
+                subscription = new Subscription( );
+                subscription.setIdSubscription( daoUtil.getInt( 1 ) );
+                subscription.setUserId( daoUtil.getString( 2 ) );
+                subscription.setSubscriptionProvider( daoUtil.getString( 3 ) );
+                subscription.setSubscriptionKey( daoUtil.getString( 4 ) );
+                subscription.setIdSubscribedResource( daoUtil.getString( 5 ) );
+            }
+
+            daoUtil.free( );
+            return subscription;
+        }
     }
 
     /**
@@ -140,10 +145,12 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     @Override
     public void delete( int nSubscriptionId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nSubscriptionId );
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+            daoUtil.setInt( 1, nSubscriptionId );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
@@ -152,16 +159,18 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     @Override
     public void store( Subscription subscription, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
 
-        daoUtil.setString( 1, subscription.getUserId( ) );
-        daoUtil.setString( 2, subscription.getSubscriptionProvider( ) );
-        daoUtil.setString( 3, subscription.getSubscriptionKey( ) );
-        daoUtil.setString( 4, subscription.getIdSubscribedResource( ) );
-        daoUtil.setInt( 5, subscription.getIdSubscription( ) );
+            daoUtil.setString( 1, subscription.getUserId( ) );
+            daoUtil.setString( 2, subscription.getSubscriptionProvider( ) );
+            daoUtil.setString( 3, subscription.getSubscriptionKey( ) );
+            daoUtil.setString( 4, subscription.getIdSubscribedResource( ) );
+            daoUtil.setInt( 5, subscription.getIdSubscription( ) );
 
-        daoUtil.executeUpdate( );
-        daoUtil.free( );
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 
     /**
@@ -170,24 +179,26 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     @Override
     public Collection<Subscription> selectSubscriptionsList( Plugin plugin )
     {
-        Collection<Subscription> subscriptionList = new ArrayList<Subscription>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
+        Collection<Subscription> subscriptionList = new ArrayList<>( );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            Subscription subscription = new Subscription( );
+            daoUtil.executeQuery( );
 
-            subscription.setIdSubscription( daoUtil.getInt( 1 ) );
-            subscription.setUserId( daoUtil.getString( 2 ) );
-            subscription.setSubscriptionProvider( daoUtil.getString( 3 ) );
-            subscription.setSubscriptionKey( daoUtil.getString( 4 ) );
-            subscription.setIdSubscribedResource( daoUtil.getString( 5 ) );
+            while ( daoUtil.next( ) )
+            {
+                Subscription subscription = new Subscription( );
 
-            subscriptionList.add( subscription );
+                subscription.setIdSubscription( daoUtil.getInt( 1 ) );
+                subscription.setUserId( daoUtil.getString( 2 ) );
+                subscription.setSubscriptionProvider( daoUtil.getString( 3 ) );
+                subscription.setSubscriptionKey( daoUtil.getString( 4 ) );
+                subscription.setIdSubscribedResource( daoUtil.getString( 5 ) );
+
+                subscriptionList.add( subscription );
+            }
+
+            daoUtil.free( );
         }
-
-        daoUtil.free( );
         return subscriptionList;
     }
 
@@ -197,7 +208,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     @Override
     public List<Subscription> findByFilter( SubscriptionFilter filter )
     {
-        List<Subscription> listSubscription = new ArrayList<Subscription>( );
+        List<Subscription> listSubscription = new ArrayList<>( );
         boolean bHasFilter = false;
         StringBuilder sbSql = new StringBuilder( SQL_QUERY_SELECT );
         if ( StringUtils.isNotEmpty( filter.getUserId( ) ) )
@@ -247,38 +258,40 @@ public final class SubscriptionDAO implements ISubscriptionDAO
         }
 
         int nIndex = 1;
-        DAOUtil daoUtil = new DAOUtil( sbSql.toString( ) );
-        if ( StringUtils.isNotEmpty( filter.getUserId( ) ) )
+        try ( DAOUtil daoUtil = new DAOUtil( sbSql.toString( ) ) )
         {
-            daoUtil.setString( nIndex++, filter.getUserId( ) );
-        }
-        if ( filter.getSubscriptionProvider( ) != null )
-        {
-            daoUtil.setString( nIndex++, filter.getSubscriptionProvider( ) );
-        }
-        if ( filter.getSubscriptionKey( ) != null )
-        {
-            daoUtil.setString( nIndex++, filter.getSubscriptionKey( ) );
-        }
-        if ( filter.getIdSubscribedResource( ) != null )
-        {
-            // Warning, no increment here !
-            daoUtil.setString( nIndex, filter.getIdSubscribedResource( ) );
-        }
-        daoUtil.executeQuery( );
+            if ( StringUtils.isNotEmpty( filter.getUserId( ) ) )
+            {
+                daoUtil.setString( nIndex++, filter.getUserId( ) );
+            }
+            if ( filter.getSubscriptionProvider( ) != null )
+            {
+                daoUtil.setString( nIndex++, filter.getSubscriptionProvider( ) );
+            }
+            if ( filter.getSubscriptionKey( ) != null )
+            {
+                daoUtil.setString( nIndex++, filter.getSubscriptionKey( ) );
+            }
+            if ( filter.getIdSubscribedResource( ) != null )
+            {
+                // Warning, no increment here !
+                daoUtil.setString( nIndex, filter.getIdSubscribedResource( ) );
+            }
+            daoUtil.executeQuery( );
 
-        while ( daoUtil.next( ) )
-        {
-            Subscription subscription = new Subscription( );
-            subscription.setIdSubscription( daoUtil.getInt( 1 ) );
-            subscription.setUserId( daoUtil.getString( 2 ) );
-            subscription.setSubscriptionProvider( daoUtil.getString( 3 ) );
-            subscription.setSubscriptionKey( daoUtil.getString( 4 ) );
-            subscription.setIdSubscribedResource( daoUtil.getString( 5 ) );
-            listSubscription.add( subscription );
-        }
+            while ( daoUtil.next( ) )
+            {
+                Subscription subscription = new Subscription( );
+                subscription.setIdSubscription( daoUtil.getInt( 1 ) );
+                subscription.setUserId( daoUtil.getString( 2 ) );
+                subscription.setSubscriptionProvider( daoUtil.getString( 3 ) );
+                subscription.setSubscriptionKey( daoUtil.getString( 4 ) );
+                subscription.setIdSubscribedResource( daoUtil.getString( 5 ) );
+                listSubscription.add( subscription );
+            }
 
-        daoUtil.free( );
+            daoUtil.free( );
+        }
 
         return listSubscription;
     }
