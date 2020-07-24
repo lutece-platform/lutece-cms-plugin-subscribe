@@ -1,29 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?><plug-in>
-    <name>subscribe</name>
-    <class>fr.paris.lutece.plugins.subscribe.service.SubscribePlugin</class>
-    <version>1.0.4-SNAPSHOT</version>
-    <documentation/>
-    <installation/>
-    <changes/>
-    <user-guide/>
-    <description>subscribe.plugin.description</description>
-    <provider>subscribe.plugin.provider</provider>
-    <provider-url>http://dev.lutece.paris.fr</provider-url>
-    <icon-url>images/admin/skin/plugins/subscribe/subscribe.png</icon-url>
-    <copyright>Copyright (c) 2013 Mairie de Paris</copyright>
-    <db-pool-required>1</db-pool-required>
-    
-    <!-- Admin features parameters -->
-    <admin-features>
-    </admin-features>    
-  	<!-- XPages parameters -->
+<?xml version="1.0" encoding="UTF-8"?>
+<plug-in>
+	<name>subscribe</name>
+	<class>fr.paris.lutece.plugins.subscribe.service.SubscribePlugin
+	</class>
+	<version>1.0.4-SNAPSHOT</version>
+	<documentation />
+	<installation />
+	<changes />
+	<user-guide />
+	<description>subscribe.plugin.description</description>
+	<provider>subscribe.plugin.provider</provider>
+	<provider-url>http://dev.lutece.paris.fr</provider-url>
+	<icon-url>images/admin/skin/plugins/subscribe/subscribe.png</icon-url>
+	<copyright>Copyright (c) 2013 Mairie de Paris</copyright>
+	<db-pool-required>1</db-pool-required>
+
+	<!-- Admin features parameters -->
+	<admin-features>
+	</admin-features>
+	<!-- XPages parameters -->
 	<applications>
-    	<application>
-            <application-id>subscribe</application-id>
-            <application-class>fr.paris.lutece.plugins.subscribe.web.SubscribeApp</application-class>
-        </application>
-    </applications>
+		<application>
+			<application-id>subscribe</application-id>
+			<application-class>fr.paris.lutece.plugins.subscribe.web.SubscribeApp
+			</application-class>
+		</application>
+	</applications>
 	<!-- Portlet parameters -->
-    <portlets>
-   </portlets>
+	<portlets>
+	</portlets>
 </plug-in>

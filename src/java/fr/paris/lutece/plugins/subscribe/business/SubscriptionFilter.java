@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,15 +53,17 @@ public class SubscriptionFilter
 
     /**
      * Create a new SubscriptionFilter with every field initialized
-     * @param strUserId The lutece user name
-     * @param strSubscriptionProvider The subscription provider of subscriptions
-     *            to get
-     * @param strSubscriptionKey The subscription key of subscriptions to get
-     * @param strIdSubscribedResource The id of the subscribed resource of
-     *            subscriptions to get
+     * 
+     * @param strUserId
+     *            The lutece user name
+     * @param strSubscriptionProvider
+     *            The subscription provider of subscriptions to get
+     * @param strSubscriptionKey
+     *            The subscription key of subscriptions to get
+     * @param strIdSubscribedResource
+     *            The id of the subscribed resource of subscriptions to get
      */
-    public SubscriptionFilter( String strUserId, String strSubscriptionProvider, String strSubscriptionKey,
-            String strIdSubscribedResource )
+    public SubscriptionFilter( String strUserId, String strSubscriptionProvider, String strSubscriptionKey, String strIdSubscribedResource )
     {
         this._strUserId = strUserId;
         this._strSubscriptionProvider = strSubscriptionProvider;
@@ -71,6 +73,7 @@ public class SubscriptionFilter
 
     /**
      * Get the id of the subscriber
+     * 
      * @return The id of the subscriber
      */
     public String getUserId( )
@@ -80,7 +83,9 @@ public class SubscriptionFilter
 
     /**
      * Set the lutece user name associated with this filter
-     * @param strUserId The lutece user name
+     * 
+     * @param strUserId
+     *            The lutece user name
      */
     public void setIdSubscriber( String strUserId )
     {
@@ -89,6 +94,7 @@ public class SubscriptionFilter
 
     /**
      * Returns the provider of the subscription
+     * 
      * @return The provider of the subscription
      */
     public String getSubscriptionProvider( )
@@ -98,7 +104,9 @@ public class SubscriptionFilter
 
     /**
      * Sets the SubscriptionProvider
-     * @param strSubscriptionProvider The SubscriptionProvider
+     * 
+     * @param strSubscriptionProvider
+     *            The SubscriptionProvider
      */
     public void setSubscriptionProvider( String strSubscriptionProvider )
     {
@@ -107,6 +115,7 @@ public class SubscriptionFilter
 
     /**
      * Returns the ActionKey
+     * 
      * @return The ActionKey
      */
     public String getSubscriptionKey( )
@@ -116,7 +125,9 @@ public class SubscriptionFilter
 
     /**
      * Sets the ActionKey
-     * @param strActionKey The ActionKey
+     * 
+     * @param strActionKey
+     *            The ActionKey
      */
     public void setSubscriptionKey( String strActionKey )
     {
@@ -125,6 +136,7 @@ public class SubscriptionFilter
 
     /**
      * Returns the IdSubscribedResource
+     * 
      * @return The IdSubscribedResource
      */
     public String getIdSubscribedResource( )
@@ -134,7 +146,9 @@ public class SubscriptionFilter
 
     /**
      * Sets the IdSubscribedResource
-     * @param strIdSubscribedResource The IdSubscribedResource
+     * 
+     * @param strIdSubscribedResource
+     *            The IdSubscribedResource
      */
     public void setIdSubscribedResource( String strIdSubscribedResource )
     {

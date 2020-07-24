@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,23 +37,18 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-
 /**
- * This is the business class for subscriptions. Users can subscribe to
- * resources (identified by their id) with a subscription key for a provider.<br />
- * The provider is used to prevent collisions between subscriptions lists of
- * different plugins. The subscription key is used to differentiate several
- * subscription lists from a same provider. The subscribed resource id is used
- * to configure subscriptions. <br />
- * Users are identified by their subscriber id. The subscriber id of a
- * LuteceUser can be retrieved by calling the method
+ * This is the business class for subscriptions. Users can subscribe to resources (identified by their id) with a subscription key for a provider.<br />
+ * The provider is used to prevent collisions between subscriptions lists of different plugins. The subscription key is used to differentiate several
+ * subscription lists from a same provider. The subscribed resource id is used to configure subscriptions. <br />
+ * Users are identified by their subscriber id. The subscriber id of a LuteceUser can be retrieved by calling the method
  * {@link fr.paris.lutece.plugins.subscribe.service.SubscriptionService#getIdSubscriberFromLuteceUser(fr.paris.lutece.portal.service.security.LuteceUser)
  * SubscriptionService#getIdSubscriberFromLuteceUser( LuteceUser )} <br />
  * Every string fields of this class be less than 255 characters long
  */
 public class Subscription
 {
-    // Variables declarations 
+    // Variables declarations
 
     @NotEmpty( message = "#i18n{portal.validation.message.notEmpty}" )
     private int _nIdSubscription;
@@ -70,6 +65,7 @@ public class Subscription
 
     /**
      * Returns the technical id of the subscription
+     * 
      * @return The technical id of the subscription
      */
     public int getIdSubscription( )
@@ -79,7 +75,9 @@ public class Subscription
 
     /**
      * Sets the technical id of the subscription
-     * @param nIdSubscription The technical id of the subscription
+     * 
+     * @param nIdSubscription
+     *            The technical id of the subscription
      */
     public void setIdSubscription( int nIdSubscription )
     {
@@ -87,10 +85,10 @@ public class Subscription
     }
 
     /**
-     * Get the id of the subscriber. Subscribers id can be retrieved by calling
-     * the method
+     * Get the id of the subscriber. Subscribers id can be retrieved by calling the method
      * {@link fr.paris.lutece.plugins.subscribe.service.SubscriptionService#getIdSubscriberFromLuteceUser(fr.paris.lutece.portal.service.security.LuteceUser)
      * SubscriptionService#getIdSubscriberFromLuteceUser( LuteceUser )}
+     * 
      * @return The id of the subscriber
      */
     public String getUserId( )
@@ -99,11 +97,12 @@ public class Subscription
     }
 
     /**
-     * Get the id of the subscriber. Subscribers id can be retrieved by calling
-     * the method
+     * Get the id of the subscriber. Subscribers id can be retrieved by calling the method
      * {@link fr.paris.lutece.plugins.subscribe.service.SubscriptionService#getIdSubscriberFromLuteceUser(fr.paris.lutece.portal.service.security.LuteceUser)
      * SubscriptionService#getIdSubscriberFromLuteceUser( LuteceUser )}
-     * @param strUserId The id of the subscriber
+     * 
+     * @param strUserId
+     *            The id of the subscriber
      */
     public void setUserId( String strUserId )
     {
@@ -112,6 +111,7 @@ public class Subscription
 
     /**
      * Returns the provider of the subscription
+     * 
      * @return The provider of the subscription
      */
     public String getSubscriptionProvider( )
@@ -121,7 +121,9 @@ public class Subscription
 
     /**
      * Sets the SubscriptionProvider
-     * @param strSubscriptionProvider The SubscriptionProvider
+     * 
+     * @param strSubscriptionProvider
+     *            The SubscriptionProvider
      */
     public void setSubscriptionProvider( String strSubscriptionProvider )
     {
@@ -129,8 +131,8 @@ public class Subscription
     }
 
     /**
-     * Returns the subscription key. The subscription key is used to
-     * differentiates several subscription lists of a same provider
+     * Returns the subscription key. The subscription key is used to differentiates several subscription lists of a same provider
+     * 
      * @return The subscription key
      */
     public String getSubscriptionKey( )
@@ -139,9 +141,10 @@ public class Subscription
     }
 
     /**
-     * Sets the subscription key. The subscription key is used to differentiates
-     * several subscription lists of a same provider
-     * @param strSubscriptionKey The ActionKey
+     * Sets the subscription key. The subscription key is used to differentiates several subscription lists of a same provider
+     * 
+     * @param strSubscriptionKey
+     *            The ActionKey
      */
     public void setSubscriptionKey( String strSubscriptionKey )
     {
@@ -150,6 +153,7 @@ public class Subscription
 
     /**
      * Returns the id of the subscribed resource
+     * 
      * @return The id of the subscribed resource
      */
     public String getIdSubscribedResource( )
@@ -159,7 +163,9 @@ public class Subscription
 
     /**
      * Sets the id of the subscribed resource
-     * @param strIdSubscribedResource The id of the subscribed resource
+     * 
+     * @param strIdSubscribedResource
+     *            The id of the subscribed resource
      */
     public void setIdSubscribedResource( String strIdSubscribedResource )
     {

@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
- * Alimport fr.paris.lutece.plugins.subscribe.business.ISubscriptionDAO;
-import fr.paris.lutece.plugins.subscribe.business.Subscription;
-import fr.paris.lutece.plugins.subscribe.business.SubscriptionFilter;
-import fr.paris.lutece.portal.service.security.LuteceUser;
-import fr.paris.lutece.portal.service.security.LuteceUserService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
- nor 'Lutece' nor the names of its
+ * Copyright (c) 2002-2020, City of Paris
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice
+ *     and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice
+ *     and the following disclaimer in the documentation and/or other materials
+ *     provided with the distribution.
+ *
+ *  3. Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
  *     contributors may be used to endorse or promote products derived from
  *     this software without specific prior written permission.
  *
@@ -32,8 +32,6 @@ import org.apache.commons.lang.StringUtils;
  * License 1.0
  */
 package fr.paris.lutece.plugins.subscribe.service;
-
-import fr.paris.lutece.plugins.subscribe.business.ISubscriptionDAO;
 import fr.paris.lutece.plugins.subscribe.business.Subscription;
 import fr.paris.lutece.plugins.subscribe.business.SubscriptionFilter;
 import fr.paris.lutece.portal.service.security.LuteceUser;
@@ -47,6 +45,8 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+
+import fr.paris.lutece.plugins.subscribe.business.ISubscriptionDAO;
 
 /**
  * Service to manage subscriptions
@@ -66,6 +66,7 @@ public final class SubscriptionService
 
     /**
      * Get the instance of the subscription service
+     * 
      * @return The instance of the subscription service
      */
     public static SubscriptionService getInstance( )
@@ -75,28 +76,36 @@ public final class SubscriptionService
 
     /**
      * Create a new subscription for the given user
-     * @param subscription The subscription to create
-     * @param user The user to associate the subscription to
+     * 
+     * @param subscription
+     *            The subscription to create
+     * @param user
+     *            The user to associate the subscription to
      */
     public void createSubscription( Subscription subscription, LuteceUser user )
     {
-       createSubscription( subscription, user.getName( ));
+        createSubscription( subscription, user.getName( ) );
     }
+
     /**
      * Create a new subscription for the given user Key
-     * @param subscription The subscription to create
-     * @param strLuteceUserName The user key to associate the subscription to
+     * 
+     * @param subscription
+     *            The subscription to create
+     * @param strLuteceUserName
+     *            The user key to associate the subscription to
      */
-    public void createSubscription( Subscription subscription, String strLuteceUserName)
+    public void createSubscription( Subscription subscription, String strLuteceUserName )
     {
-        subscription.setUserId( strLuteceUserName);
+        subscription.setUserId( strLuteceUserName );
         createSubscription( subscription );
     }
 
     /**
-     * Create a new subscription. The subscriber id of the subscription must
-     * have been filled
-     * @param subscription The subscription to create
+     * Create a new subscription. The subscriber id of the subscription must have been filled
+     * 
+     * @param subscription
+     *            The subscription to create
      */
     public void createSubscription( Subscription subscription )
     {
@@ -105,7 +114,9 @@ public final class SubscriptionService
 
     /**
      * Get a subscription from its id
-     * @param nIdSubscription The id of the subscription
+     * 
+     * @param nIdSubscription
+     *            The id of the subscription
      * @return The subscription, or null if no subscription has the given id
      */
     public Subscription findBySubscriptionId( int nIdSubscription )
@@ -115,7 +126,9 @@ public final class SubscriptionService
 
     /**
      * Find subscriptions that match a given filter
-     * @param filter The filter
+     * 
+     * @param filter
+     *            The filter
      * @return The list of subscriptions that match the given filter
      */
     public List<Subscription> findByFilter( SubscriptionFilter filter )
@@ -125,9 +138,11 @@ public final class SubscriptionService
 
     /**
      * Remove a subscription from its id
-     * @param nIdSubscription The id of the subscription to remove
-     * @param bNotifySubscriptionProvider True to notify the provider of the
-     *            subscription that it has been removed, false otherwise
+     * 
+     * @param nIdSubscription
+     *            The id of the subscription to remove
+     * @param bNotifySubscriptionProvider
+     *            True to notify the provider of the subscription that it has been removed, false otherwise
      */
     public void removeSubscription( int nIdSubscription, boolean bNotifySubscriptionProvider )
     {
@@ -143,16 +158,17 @@ public final class SubscriptionService
 
     /**
      * Remove a subscription
-     * @param subscription The subscription to remove
-     * @param bNotifySubscriptionProvider True to notify the provider of the
-     *            subscription that it has been removed, false otherwise
+     * 
+     * @param subscription
+     *            The subscription to remove
+     * @param bNotifySubscriptionProvider
+     *            True to notify the provider of the subscription that it has been removed, false otherwise
      */
     public void removeSubscription( Subscription subscription, boolean bNotifySubscriptionProvider )
     {
         if ( bNotifySubscriptionProvider )
         {
-            List<ISubscriptionProviderService> listProviders = SpringContextService
-                    .getBeansOfType( ISubscriptionProviderService.class );
+            List<ISubscriptionProviderService> listProviders = SpringContextService.getBeansOfType( ISubscriptionProviderService.class );
             for ( ISubscriptionProviderService provider : listProviders )
             {
                 if ( StringUtils.equals( subscription.getSubscriptionProvider( ), provider.getProviderName( ) ) )
@@ -166,7 +182,9 @@ public final class SubscriptionService
 
     /**
      * Get a lutece user associated to a subscription
-     * @param subscription The subscription
+     * 
+     * @param subscription
+     *            The subscription
      * @return The lutece user, or null if no lutece user was found
      */
     public LuteceUser getLuteceUserFromSubscription( Subscription subscription )
@@ -175,25 +193,24 @@ public final class SubscriptionService
     }
 
     /**
-     * Get the collection of users that subscribed to a given resource with the
-     * given key
-     * @param strSubscriptionProvider The subscription provider of subscribers
-     *            to get
-     * @param strSubscriptionKey The subscription key of subscribers to get
-     * @param strIdSubscribedResource The id of the subscribed resource
-     * @return The collection of users that subscribed to the given resource
-     *         with the given key. Returns an empty collection if no users was
-     *         found
+     * Get the collection of users that subscribed to a given resource with the given key
+     * 
+     * @param strSubscriptionProvider
+     *            The subscription provider of subscribers to get
+     * @param strSubscriptionKey
+     *            The subscription key of subscribers to get
+     * @param strIdSubscribedResource
+     *            The id of the subscribed resource
+     * @return The collection of users that subscribed to the given resource with the given key. Returns an empty collection if no users was found
      */
-    public Collection<LuteceUser> getSubscriberList( String strSubscriptionProvider, String strSubscriptionKey,
-            String strIdSubscribedResource )
+    public Collection<LuteceUser> getSubscriberList( String strSubscriptionProvider, String strSubscriptionKey, String strIdSubscribedResource )
     {
         SubscriptionFilter filter = new SubscriptionFilter( );
         filter.setSubscriptionProvider( strSubscriptionProvider );
         filter.setSubscriptionKey( strSubscriptionKey );
         filter.setIdSubscribedResource( strIdSubscribedResource );
         List<Subscription> listSubscription = findByFilter( filter );
-        Set<LuteceUser> usersFound = new HashSet<LuteceUser>( );
+        Set<LuteceUser> usersFound = new HashSet<>( );
         for ( Subscription subscription : listSubscription )
         {
             LuteceUser user = LuteceUserService.getLuteceUserFromName( subscription.getUserId( ) );
@@ -207,14 +224,14 @@ public final class SubscriptionService
 
     /**
      * Get a provider service from its name
-     * @param strProvider The name of the provider service to get
-     * @return The provider service, or null if no provider service has the
-     *         given name
+     * 
+     * @param strProvider
+     *            The name of the provider service to get
+     * @return The provider service, or null if no provider service has the given name
      */
     public ISubscriptionProviderService getProviderService( String strProvider )
     {
-        List<ISubscriptionProviderService> listProviderServices = SpringContextService
-                .getBeansOfType( ISubscriptionProviderService.class );
+        List<ISubscriptionProviderService> listProviderServices = SpringContextService.getBeansOfType( ISubscriptionProviderService.class );
         for ( ISubscriptionProviderService provider : listProviderServices )
         {
             if ( StringUtils.equals( strProvider, provider.getProviderName( ) ) )

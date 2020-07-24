@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2020, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,6 +51,7 @@ import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
 import fr.paris.lutece.portal.util.mvc.xpage.annotations.Controller;
+import fr.paris.lutece.portal.web.l10n.LocaleService;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
@@ -62,6 +63,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -98,7 +100,9 @@ public class SubscribeApp extends MVCApplication
 
     /**
      * View the list of subscriptions of a user
-     * @param request The request
+     * 
+     * @param request
+     *            The request
      * @return The XPage to display
      */
     @View( value = VIEW_SUBSCRIPTION_LIST, defaultView = true )
@@ -110,11 +114,11 @@ public class SubscribeApp extends MVCApplication
     }
 
     /**
-     * Get the HTML content to display the list of subscriptions of the current
-     * user
-     * @param request The user
-     * @return The HTML content to display, or an empty string if the user has
-     *         not logged in or if the authentication is not enabled
+     * Get the HTML content to display the list of subscriptions of the current user
+     * 
+     * @param request
+     *            The user
+     * @return The HTML content to display, or an empty string if the user has not logged in or if the authentication is not enabled
      */
     public static String getSubscriptionList( HttpServletRequest request )
     {
@@ -127,28 +131,25 @@ public class SubscribeApp extends MVCApplication
                 SubscriptionFilter filter = new SubscriptionFilter( );
                 filter.setIdSubscriber( user.getName( ) );
                 List<Subscription> listSubscription = subscriptionService.findByFilter( filter );
-                List<SubscriptionDTO> listSubscriptionDto = new ArrayList<SubscriptionDTO>( listSubscription.size( ) );
+                List<SubscriptionDTO> listSubscriptionDto = new ArrayList<>( listSubscription.size( ) );
                 for ( Subscription subscription : listSubscription )
                 {
-                    ISubscriptionProviderService providerService = subscriptionService.getProviderService( subscription
-                            .getSubscriptionProvider( ) );
+                    ISubscriptionProviderService providerService = subscriptionService.getProviderService( subscription.getSubscriptionProvider( ) );
                     SubscriptionDTO subscriptionDTO = new SubscriptionDTO( );
                     subscriptionDTO.setIdSubscription( subscription.getIdSubscription( ) );
-                    subscriptionDTO.setRemovable( providerService.isSubscriptionRemovable( user,
-                            subscription.getSubscriptionKey( ), subscription.getIdSubscribedResource( ) ) );
-                    subscriptionDTO.setUrlModify( providerService.getUrlModifySubscription( user,
-                            subscription.getSubscriptionKey( ), subscription.getIdSubscribedResource( ) ) );
-                    subscriptionDTO.setHtmlSubscription( providerService.getSubscriptionHtmlDescriptionBis( user,
-                            subscription.getSubscriptionKey( ), subscription.getIdSubscribedResource( ),
-                            request.getLocale( ),subscription.getIdSubscribedResource() ) );
+                    subscriptionDTO.setRemovable(
+                            providerService.isSubscriptionRemovable( user, subscription.getSubscriptionKey( ), subscription.getIdSubscribedResource( ) ) );
+                    subscriptionDTO.setUrlModify(
+                            providerService.getUrlModifySubscription( user, subscription.getSubscriptionKey( ), subscription.getIdSubscribedResource( ) ) );
+                    subscriptionDTO.setHtmlSubscription( providerService.getSubscriptionHtmlDescriptionBis( user, subscription.getSubscriptionKey( ),
+                            subscription.getIdSubscribedResource( ), getStaticLocale( request ), subscription.getIdSubscribedResource( ) ) );
                     listSubscriptionDto.add( subscriptionDTO );
                 }
 
-                Map<String, Object> model = new HashMap<String, Object>( );
+                Map<String, Object> model = new HashMap<>( );
                 model.put( MARK_LIST_SUBSCRIPTION_DTO, listSubscriptionDto );
 
-                HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_SUBSCRIPTION,
-                        request.getLocale( ), model );
+                HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_SUBSCRIPTION, getStaticLocale( request ), model );
 
                 return template.getHtml( );
             }
@@ -171,7 +172,7 @@ public class SubscribeApp extends MVCApplication
         String strReferer = request.getHeader( PARAMETER_REFERER );
         UrlItem urlItem = new UrlItem( PATH_PORTAL + getActionUrl( ACTION_DO_REMOVE_URL ) );
         urlItem.addParameter( PARAMETER_ID_SUBSCRIPTION, request.getParameter( PARAMETER_ID_SUBSCRIPTION ) );
-        Map<String, Object> requestParameters = new HashMap<String, Object>( );
+        Map<String, Object> requestParameters = new HashMap<>( );
 
         if ( AppPropertiesService.getPropertyBoolean( ENCODE_FROM_URL_PARAMETER, true ) )
         {
@@ -236,5 +237,17 @@ public class SubscribeApp extends MVCApplication
 
         redirect( request, strUrl );
         return new XPage( );
+    }
+
+    /**
+     * Default getStaticLocale() implementation. Could be overriden
+     * 
+     * @param request
+     *            The HTTP request
+     * @return The Locale
+     */
+    public static Locale getStaticLocale( HttpServletRequest request )
+    {
+        return LocaleService.getContextUserLocale( request );
     }
 }
