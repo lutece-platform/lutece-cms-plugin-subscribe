@@ -50,6 +50,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
 {
 
     // Constants
+	private static final String SQL_FILTER_ID_USER = " id_user = ? ";
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id_subscription ) FROM subscribe_subscription";
     private static final String SQL_QUERY_SELECT = " SELECT id_subscription, id_user, subscription_provider, subscription_key, id_subscribed_resource, subscription_order FROM subscribe_subscription ";
     private static final String SQL_QUERY_SELECT_FROM_SUBSCRIPTION_ID = SQL_QUERY_SELECT + " WHERE id_subscription = ? ";
@@ -57,9 +58,9 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     private static final String SQL_QUERY_DELETE = "DELETE FROM subscribe_subscription WHERE id_subscription = ? ";
     private static final String SQL_QUERY_UPDATE = "UPDATE subscribe_subscription SET id_user = ?, subscription_provider = ?, subscription_key = ?, id_subscribed_resource = ?, subscription_order = ? WHERE id_subscription = ?";
     private static final String SQL_QUERY_SELECTALL = "SELECT id_subscription, id_user, subscription_provider, subscription_key, id_subscribed_resource, subscription_order FROM subscribe_subscription";
-    private static final String SQL_QUERY_MAX_ORDER = "SELECT max( subscription_order ) FROM subscribe_subscription";
+    private static final String SQL_QUERY_MAX_ORDER = "SELECT max( subscription_order ) FROM subscribe_subscription where "+ SQL_FILTER_ID_USER;
 
-    private static final String SQL_FILTER_ID_USER = " id_user = ? ";
+ 
     private static final String SQL_FILTER_PROVIDER = " subscription_provider = ? ";
     private static final String SQL_FILTER_SUBSCRIPTION_KEY = " subscription_key = ? ";
     private static final String SQL_FILTER_ID_SUBSCRIBED_RESOURCE = " id_subscribed_resource = ? ";
@@ -106,7 +107,7 @@ public final class SubscriptionDAO implements ISubscriptionDAO
             daoUtil.setString( 3, subscription.getSubscriptionProvider( ) );
             daoUtil.setString( 4, subscription.getSubscriptionKey( ) );
             daoUtil.setString( 5, subscription.getIdSubscribedResource( ) );
-            daoUtil.setInt( 6, getMaxOrder( plugin ) + 1 );
+            daoUtil.setInt( 6, getMaxOrder( subscription.getUserId( ) ,plugin ) + 1 );
             
             daoUtil.executeUpdate( );
             daoUtil.free( );
@@ -304,10 +305,11 @@ public final class SubscriptionDAO implements ISubscriptionDAO
     }
 
     @Override
-    public int getMaxOrder( Plugin plugin )
+    public int getMaxOrder( String strIdUser,Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_MAX_ORDER ) )
         {
+            daoUtil.setString( 1, strIdUser );
             daoUtil.executeQuery( );
             
             while ( daoUtil.next( ) )

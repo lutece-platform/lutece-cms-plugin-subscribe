@@ -111,6 +111,6 @@ public interface ISubscriptionDAO
      * @param plugin
      * @return max order
      */
-    int getMaxOrder( Plugin plugin );
+    int getMaxOrder( String strIdUser,Plugin plugin );
 
 }
