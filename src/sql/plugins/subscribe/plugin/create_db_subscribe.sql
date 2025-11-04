@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset subscribe:create_db_subscribe.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 
 --
 -- Structure for table subscribe_subscription
