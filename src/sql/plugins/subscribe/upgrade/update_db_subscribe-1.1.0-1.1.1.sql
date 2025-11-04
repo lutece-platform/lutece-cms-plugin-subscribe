@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset subscribe:update_db_subscribe-1.1.0-1.1.1.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 
 --
 -- Update table subscribe_subscription
