@@ -1,28 +1,43 @@
-<legend>#i18n{subscribe.viewSubscription.title}</legend>
+<h2>#i18n{subscribe.viewSubscription.title}</h2>
 <div>
-	<table class="table table-stripped">
+	<table class="table table-striped">
 		<#if list_subscription_dto?? && list_subscription_dto?size &gt; 0>
-			<#list list_subscription_dto as subscription_dto>
+			<thead>
 				<tr>
-					<td>
-						${subscription_dto.htmlSubscription}
-					</td>
-					<td>
-						<#if subscription_dto.urlModify?? && subscription_dto.urlModify?has_content>
-							<a class="btn btn-primary btn-small" title="#i18n{portal.util.labelModify}" href="${subscription_dto.urlModify}">
-								<i class="icon-edit icon-white">&nbsp;</i>
-							</a>
-						</#if>
-						<#if subscription_dto.removable>
-							<a class="btn btn-danger btn-small" title="#i18n{portal.util.labelDelete}" href="jsp/site/Portal.jsp?page=subscribe&action=confirmRemoveSubscription&idSubscription=${subscription_dto.idSubscription}">
-								<i class="icon-trash icon-white">&nbsp;</i>
-							</a>
-						</#if>
-					</td>
+					<th>#i18n{subscribe.viewSubscription.labelSubscription}</th>
+					<th>#i18n{subscribe.viewSubscription.labelActions}</th>
 				</tr>
-			</#list>
+			</thead>
+			<tbody>
+				<#list list_subscription_dto as subscription_dto>
+					<tr>
+						<td>
+							${subscription_dto.htmlSubscription}
+						</td>
+						<td>
+							<div class="d-flex gap-1">
+								<#if subscription_dto.urlModify?? && subscription_dto.urlModify?has_content>
+									<a class="btn btn-primary btn-sm" title="#i18n{portal.util.labelModify}" href="${subscription_dto.urlModify}">
+										<i class="ti ti-pencil"></i>
+									</a>
+								</#if>
+								<#if subscription_dto.removable>
+									<a class="btn btn-danger btn-sm" title="#i18n{portal.util.labelDelete}" href="jsp/site/Portal.jsp?page=subscribe&action=confirmRemoveSubscription&idSubscription=${subscription_dto.idSubscription}">
+										<i class="ti ti-trash"></i>
+									</a>
+								</#if>
+							</div>
+						</td>
+					</tr>
+				</#list>
+			</tbody>
 		<#else>
 			#i18n{subscribe.viewSubscription.noSubscription}
 		</#if>
 	</table>
+	<div class="mt-3">
+		<a class="btn btn-secondary" href="javascript:history.back()">
+			<i class="ti ti-arrow-left"></i> #i18n{subscribe.viewSubscription.labelBack}
+		</a>
+	</div>
 </div>

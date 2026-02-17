@@ -174,20 +174,24 @@ public class SubscribeApp extends MVCApplication
         urlItem.addParameter( PARAMETER_ID_SUBSCRIPTION, request.getParameter( PARAMETER_ID_SUBSCRIPTION ) );
         Map<String, Object> requestParameters = new HashMap<>( );
 
-        if ( AppPropertiesService.getPropertyBoolean( ENCODE_FROM_URL_PARAMETER, true ) )
+        if ( StringUtils.isNotEmpty( strReferer ) )
         {
-            try
-            {
-                urlItem.addParameter( PARAMETER_FROM_URL, URLEncoder.encode( strReferer, "UTF-8" ) );
-            }
-            catch( UnsupportedEncodingException e )
-            {
-                AppLogService.error( e );
-            }
-        }
-        else
-        {
-            urlItem.addParameter( PARAMETER_FROM_URL, strReferer );
+        
+        		if ( AppPropertiesService.getPropertyBoolean( ENCODE_FROM_URL_PARAMETER, true ) )
+        		{
+        			try
+        			{
+        				urlItem.addParameter( PARAMETER_FROM_URL, URLEncoder.encode( strReferer, "UTF-8" ) );
+        			}
+        			catch( UnsupportedEncodingException e )
+        			{
+        				AppLogService.error( e );
+        			}
+        		}
+        		else
+        		{
+        			urlItem.addParameter( PARAMETER_FROM_URL, strReferer );
+        		}
         }
 
         SiteMessageService.setMessage( request, MESSAGE_CONFIRM_REMOVE_SUBSCRIPTION, SiteMessage.TYPE_CONFIRMATION, urlItem.getUrl( ), requestParameters );
@@ -235,8 +239,7 @@ public class SubscribeApp extends MVCApplication
             strUrl = AppPathService.getBaseUrl( request ) + JSP_URL_SUBSCRIBE_XPAGE;
         }
 
-        redirect( request, strUrl );
-        return new XPage( );
+        return redirect( request, strUrl );
     }
 
     /**
