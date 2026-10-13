@@ -65,6 +65,21 @@ public interface ISubscriptionProviderService
      */
     String getSubscriptionHtmlDescription( LuteceUser user, String strSubscriptionKey, String strIdSubscribedResource, Locale locale );
 
+    /**
+     * Get the description of a subscription for the list of subscriptions of a user
+     * 
+     * @param user
+     *            The user
+     * @param strSubscriptionKey
+     *            The key of the subscription
+     * @param strIdSubscribedResource
+     *            The id of the subscribed resource
+     * @param locale
+     *            The locale to display the generated HTML in
+     * @param userSub
+     *            The id of the subscribed resource, as given by the subscription list
+     * @return An HTML string that describes the subscription
+     */
     String getSubscriptionHtmlDescriptionBis( LuteceUser user, String strSubscriptionKey, String strIdSubscribedResource, Locale locale, String userSub );
 
     /**

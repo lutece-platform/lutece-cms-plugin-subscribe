@@ -33,9 +33,8 @@
  */
 package fr.paris.lutece.plugins.subscribe.business;
 
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 /**
  * This is the business class for subscriptions. Users can subscribe to resources (identified by their id) with a subscription key for a provider.<br />
@@ -50,7 +49,6 @@ public class Subscription
 {
     // Variables declarations
 
-    @NotEmpty( message = "#i18n{portal.validation.message.notEmpty}" )
     private int _nIdSubscription;
     @NotEmpty( message = "#i18n{portal.validation.message.notEmpty}" )
     private String _strUserId;

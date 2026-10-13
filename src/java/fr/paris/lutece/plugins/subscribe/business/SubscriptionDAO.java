@@ -36,6 +36,8 @@ package fr.paris.lutece.plugins.subscribe.business;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,6 +48,7 @@ import org.apache.commons.lang3.StringUtils;
  * This class provides Data Access methods for Subscription objects
  */
 
+@ApplicationScoped
 public final class SubscriptionDAO implements ISubscriptionDAO
 {
 
@@ -86,7 +89,6 @@ public final class SubscriptionDAO implements ISubscriptionDAO
                 nKey = daoUtil.getInt( 1 ) + 1;
             }
 
-            daoUtil.free( );
             return nKey;
         }
     }
@@ -110,7 +112,6 @@ public final class SubscriptionDAO implements ISubscriptionDAO
             daoUtil.setInt( 6, getMaxOrder( subscription.getUserId( ) ,plugin ) + 1 );
             
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -138,7 +139,6 @@ public final class SubscriptionDAO implements ISubscriptionDAO
                 subscription.setOrder( daoUtil.getInt( 6 ) );
             }
 
-            daoUtil.free( );
             return subscription;
         }
     }
@@ -153,7 +153,6 @@ public final class SubscriptionDAO implements ISubscriptionDAO
         {
             daoUtil.setInt( 1, nSubscriptionId );
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -175,7 +174,6 @@ public final class SubscriptionDAO implements ISubscriptionDAO
             daoUtil.setInt( 6, subscription.getIdSubscription( ) );
             
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -204,7 +202,6 @@ public final class SubscriptionDAO implements ISubscriptionDAO
                 subscriptionList.add( subscription );
             }
 
-            daoUtil.free( );
         }
         return subscriptionList;
     }
@@ -298,12 +295,14 @@ public final class SubscriptionDAO implements ISubscriptionDAO
                 listSubscription.add( subscription );
             }
 
-            daoUtil.free( );
         }
 
         return listSubscription;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getMaxOrder( String strIdUser,Plugin plugin )
     {

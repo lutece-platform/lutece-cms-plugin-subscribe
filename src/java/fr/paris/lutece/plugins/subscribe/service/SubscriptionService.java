@@ -37,41 +37,45 @@ import fr.paris.lutece.plugins.subscribe.business.Subscription;
 import fr.paris.lutece.plugins.subscribe.business.SubscriptionFilter;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.LuteceUserService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import fr.paris.lutece.plugins.subscribe.business.ISubscriptionDAO;
 
 /**
  * Service to manage subscriptions
  */
-public final class SubscriptionService
+@ApplicationScoped
+public class SubscriptionService
 {
-    private static SubscriptionService _instance = new SubscriptionService( );
-    private ISubscriptionDAO _dao = SpringContextService.getBean( "subscribe.subscriptionDAO" );
+    @Inject
+    private ISubscriptionDAO _dao;
 
-    /**
-     * Private constructor
-     */
-    private SubscriptionService( )
-    {
-        // Do nothing
-    }
+    @Inject
+    @Any
+    private Instance<ISubscriptionProviderService> _providerServices;
 
     /**
      * Get the instance of the subscription service
      * 
      * @return The instance of the subscription service
+     * @deprecated inject the bean, or use CDI.current( ).select( SubscriptionService.class ).get( )
      */
+    @Deprecated( since = "2.0.0", forRemoval = true )
     public static SubscriptionService getInstance( )
     {
-        return _instance;
+        return CDI.current( ).select( SubscriptionService.class ).get( );
     }
 
     /**
@@ -168,10 +172,9 @@ public final class SubscriptionService
     {
         if ( bNotifySubscriptionProvider )
         {
-            List<ISubscriptionProviderService> listProviders = SpringContextService.getBeansOfType( ISubscriptionProviderService.class );
-            for ( ISubscriptionProviderService provider : listProviders )
+            for ( ISubscriptionProviderService provider : _providerServices )
             {
-                if ( StringUtils.equals( subscription.getSubscriptionProvider( ), provider.getProviderName( ) ) )
+                if ( Strings.CS.equals( subscription.getSubscriptionProvider( ), provider.getProviderName( ) ) )
                 {
                     provider.notifySubscriptionRemoval( subscription );
                 }
@@ -231,10 +234,9 @@ public final class SubscriptionService
      */
     public ISubscriptionProviderService getProviderService( String strProvider )
     {
-        List<ISubscriptionProviderService> listProviderServices = SpringContextService.getBeansOfType( ISubscriptionProviderService.class );
-        for ( ISubscriptionProviderService provider : listProviderServices )
+        for ( ISubscriptionProviderService provider : _providerServices )
         {
-            if ( StringUtils.equals( strProvider, provider.getProviderName( ) ) )
+            if ( Strings.CS.equals( strProvider, provider.getProviderName( ) ) )
             {
                 return provider;
             }

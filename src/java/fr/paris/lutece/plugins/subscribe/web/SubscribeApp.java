@@ -46,7 +46,6 @@ import fr.paris.lutece.portal.service.security.SecurityService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
-import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
@@ -57,6 +56,7 @@ import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.url.UrlItem;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -66,23 +66,29 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  * Subscribe application
  */
-@Controller( xpageName = "subscribe", pageTitleI18nKey = "subscribe.viewSubscription.title", pagePathI18nKey = "subscribe.viewSubscription.title" )
+@RequestScoped
+@Named( "subscribe.xpage.subscribe" )
+@Controller( xpageName = "subscribe", pageTitleI18nKey = "subscribe.viewSubscription.title", pagePathI18nKey = "subscribe.viewSubscription.title", securityTokenEnabled = true )
 public class SubscribeApp extends MVCApplication
 {
     private static final long serialVersionUID = 4082230643317543885L;
 
     private static final String JSP_URL_SUBSCRIBE_XPAGE = "jsp/site/Portal.jsp?page=subscribe";
 
-    private static final String MESSAGE_CONFIRM_REMOVE_SUBSCRIPTION = "module.subscribe.mydashboard.message.confirmRemoveSubscription";
-    private static final String MESSAGE_ACCESS_DENIED = "module.subscribe.mydashboard.message.accessDenied";
+    private static final String MESSAGE_CONFIRM_REMOVE_SUBSCRIPTION = "subscribe.message.confirmRemoveSubscription";
+    private static final String MESSAGE_ACCESS_DENIED = "subscribe.message.accessDenied";
 
-    private static final String ENCODE_FROM_URL_PARAMETER = "encode.fromUrl.parameter";
-    private static final String ENABLE_FROM_URL_PARAMETER = "enable.fromUrl.parameter";
 
     private static final String PARAMETER_REFERER = "referer";
     private static final String PARAMETER_ID_SUBSCRIPTION = "idSubscription";
@@ -97,6 +103,17 @@ public class SubscribeApp extends MVCApplication
 
     private static final String TEMPLATE_MANAGE_SUBSCRIPTION = "skin/plugins/subscribe/view_subscription_list.html";
     private static final String MARK_LIST_SUBSCRIPTION_DTO = "list_subscription_dto";
+
+    @Inject
+    private SubscriptionService _subscriptionService;
+
+    @Inject
+    @ConfigProperty( name = "encode.fromUrl.parameter", defaultValue = "true" )
+    private boolean _bEncodeFromUrl;
+
+    @Inject
+    @ConfigProperty( name = "enable.fromUrl.parameter", defaultValue = "true" )
+    private boolean _bEnableFromUrl;
 
     /**
      * View the list of subscriptions of a user
@@ -127,7 +144,7 @@ public class SubscribeApp extends MVCApplication
             LuteceUser user = SecurityService.getInstance( ).getRegisteredUser( request );
             if ( user != null )
             {
-                SubscriptionService subscriptionService = SubscriptionService.getInstance( );
+                SubscriptionService subscriptionService = CDI.current( ).select( SubscriptionService.class ).get( );
                 SubscriptionFilter filter = new SubscriptionFilter( );
                 filter.setIdSubscriber( user.getName( ) );
                 List<Subscription> listSubscription = subscriptionService.findByFilter( filter );
@@ -166,7 +183,7 @@ public class SubscribeApp extends MVCApplication
      * @throws SiteMessageException
      *             A SiteMessageException to display the confirmation message
      */
-    @Action( ACTION_CONFIRM_REMOVE_URL )
+    @Action( value = ACTION_CONFIRM_REMOVE_URL, securityTokenAction = ACTION_DO_REMOVE_URL )
     public XPage confirmRemoveSubscription( HttpServletRequest request ) throws SiteMessageException
     {
         String strReferer = request.getHeader( PARAMETER_REFERER );
@@ -174,7 +191,7 @@ public class SubscribeApp extends MVCApplication
         urlItem.addParameter( PARAMETER_ID_SUBSCRIPTION, request.getParameter( PARAMETER_ID_SUBSCRIPTION ) );
         Map<String, Object> requestParameters = new HashMap<>( );
 
-        if ( AppPropertiesService.getPropertyBoolean( ENCODE_FROM_URL_PARAMETER, true ) )
+        if ( StringUtils.isNotBlank( strReferer ) && _bEncodeFromUrl )
         {
             try
             {
@@ -185,7 +202,7 @@ public class SubscribeApp extends MVCApplication
                 AppLogService.error( e );
             }
         }
-        else
+        else if ( StringUtils.isNotBlank( strReferer ) )
         {
             urlItem.addParameter( PARAMETER_FROM_URL, strReferer );
         }
@@ -213,10 +230,10 @@ public class SubscribeApp extends MVCApplication
         {
             int nIdSubscription = Integer.parseInt( strIdSubscription );
             LuteceUser user = SecurityService.getInstance( ).getRegisteredUser( request );
-            Subscription subscription = SubscriptionService.getInstance( ).findBySubscriptionId( nIdSubscription );
-            if ( user != null && subscription != null && StringUtils.equals( subscription.getUserId( ), user.getName( ) ) )
+            Subscription subscription = _subscriptionService.findBySubscriptionId( nIdSubscription );
+            if ( user != null && subscription != null && Strings.CS.equals( subscription.getUserId( ), user.getName( ) ) )
             {
-                SubscriptionService.getInstance( ).removeSubscription( nIdSubscription, true );
+                _subscriptionService.removeSubscription( nIdSubscription, true );
             }
             else
             {
@@ -226,7 +243,7 @@ public class SubscribeApp extends MVCApplication
 
         String strFromParam = request.getParameter( PARAMETER_FROM_URL );
         String strUrl;
-        if ( StringUtils.isNotEmpty( strFromParam ) && AppPropertiesService.getPropertyBoolean( ENABLE_FROM_URL_PARAMETER, true ) )
+        if ( StringUtils.isNotEmpty( strFromParam ) && _bEnableFromUrl )
         {
             strUrl = strFromParam;
         }
@@ -235,8 +252,7 @@ public class SubscribeApp extends MVCApplication
             strUrl = AppPathService.getBaseUrl( request ) + JSP_URL_SUBSCRIBE_XPAGE;
         }
 
-        redirect( request, strUrl );
-        return new XPage( );
+        return redirect( request, strUrl );
     }
 
     /**

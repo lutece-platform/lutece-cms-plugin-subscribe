@@ -37,6 +37,10 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.test.LuteceTestCase;
 
+import jakarta.inject.Inject;
+
+import org.junit.jupiter.api.Test;
+
 /**
  * Tests for Subscription business classes
  */
@@ -50,12 +54,15 @@ public class SubscriptionBusinessTest extends LuteceTestCase
     private final static String IDSUBSCRIBEDRESOURCE1 = "IdSubscribedResource1";
     private final static String IDSUBSCRIBEDRESOURCE2 = "IdSubscribedResource2";
 
+    @Inject
+    private ISubscriptionDAO _dao;
+
     /**
      * Test the business package of this plugin
      */
+    @Test
     public void testBusiness( )
     {
-        ISubscriptionDAO dao = new SubscriptionDAO( );
         Plugin plugin = PluginService.getPlugin( "subscribe" );
         // Initialize an object
         Subscription subscription = new Subscription( );
@@ -66,8 +73,8 @@ public class SubscriptionBusinessTest extends LuteceTestCase
         subscription.setIdSubscribedResource( IDSUBSCRIBEDRESOURCE1 );
 
         // Create test
-        dao.insert( subscription, plugin );
-        Subscription subscriptionStored = dao.load( subscription.getIdSubscription( ), plugin );
+        _dao.insert( subscription, plugin );
+        Subscription subscriptionStored = _dao.load( subscription.getIdSubscription( ), plugin );
         assertNotNull( subscriptionStored );
         assertEquals( subscriptionStored.getIdSubscription( ), subscription.getIdSubscription( ) );
         assertEquals( subscriptionStored.getSubscriptionProvider( ), subscription.getSubscriptionProvider( ) );
@@ -78,8 +85,8 @@ public class SubscriptionBusinessTest extends LuteceTestCase
         subscription.setSubscriptionProvider( SUBSCRIPTIONPROVIDER2 );
         subscription.setSubscriptionKey( ACTIONKEY2 );
         subscription.setIdSubscribedResource( IDSUBSCRIBEDRESOURCE2 );
-        dao.store( subscription, plugin );
-        subscriptionStored = dao.load( subscription.getIdSubscription( ), plugin );
+        _dao.store( subscription, plugin );
+        subscriptionStored = _dao.load( subscription.getIdSubscription( ), plugin );
         assertNotNull( subscriptionStored );
         assertEquals( subscriptionStored.getIdSubscription( ), subscription.getIdSubscription( ) );
         assertEquals( subscriptionStored.getSubscriptionProvider( ), subscription.getSubscriptionProvider( ) );
@@ -87,11 +94,11 @@ public class SubscriptionBusinessTest extends LuteceTestCase
         assertEquals( subscriptionStored.getIdSubscribedResource( ), subscription.getIdSubscribedResource( ) );
 
         // List test
-        dao.selectSubscriptionsList( plugin );
+        _dao.selectSubscriptionsList( plugin );
 
         // Delete test
-        dao.delete( subscription.getIdSubscription( ), plugin );
-        subscriptionStored = dao.load( subscription.getIdSubscription( ), plugin );
+        _dao.delete( subscription.getIdSubscription( ), plugin );
+        subscriptionStored = _dao.load( subscription.getIdSubscription( ), plugin );
         assertNull( subscriptionStored );
     }
 }
