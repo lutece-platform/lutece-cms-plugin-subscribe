@@ -2,7 +2,8 @@
 	<name>subscribe</name>
 	<class>fr.paris.lutece.plugins.subscribe.service.SubscribePlugin
 	</class>
-	<version>1.1.2-SNAPSHOT</version>
+	<version>2.0.0-SNAPSHOT</version>
+	<min-core-version>8.0.0</min-core-version>
 	<documentation/>
 	<installation/>
 	<changes/>
@@ -21,8 +22,6 @@
 	<applications>
 		<application>
 			<application-id>subscribe</application-id>
-			<application-class>fr.paris.lutece.plugins.subscribe.web.SubscribeApp
-			</application-class>
 		</application>
 	</applications>
 	<!-- Portlet parameters -->

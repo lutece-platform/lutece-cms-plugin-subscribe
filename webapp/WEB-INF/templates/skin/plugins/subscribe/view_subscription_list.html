@@ -1,28 +1,37 @@
-<legend>#i18n{subscribe.viewSubscription.title}</legend>
-<div>
-	<table class="table table-stripped">
-		<#if list_subscription_dto?? && list_subscription_dto?size &gt; 0>
+<@cTpl>
+<@cContainer>
+<@cTitle level=2>#i18n{subscribe.viewSubscription.title}</@cTitle>
+<#if list_subscription_dto?? && list_subscription_dto?size gt 0>
+	<@cTable id='subscribe-subscriptions' caption='#i18n{subscribe.viewSubscription.title}'>
+		<@cThead>
+			<@cTr>
+				<@cTh>#i18n{subscribe.viewSubscription.labelSubscription}</@cTh>
+				<@cTh>#i18n{portal.util.labelActions}</@cTh>
+			</@cTr>
+		</@cThead>
+		<@cTbody>
 			<#list list_subscription_dto as subscription_dto>
-				<tr>
-					<td>
-						${subscription_dto.htmlSubscription}
-					</td>
-					<td>
-						<#if subscription_dto.urlModify?? && subscription_dto.urlModify?has_content>
-							<a class="btn btn-primary btn-small" title="#i18n{portal.util.labelModify}" href="${subscription_dto.urlModify}">
-								<i class="icon-edit icon-white">&nbsp;</i>
-							</a>
+				<@cTr>
+					<@cTd><#noautoesc>${subscription_dto.htmlSubscription!}</#noautoesc></@cTd>
+					<@cTd>
+						<#if subscription_dto.urlModify?has_content>
+							<@cBtn label='' href=subscription_dto.urlModify class='outline-primary btn-sm' params='title="#i18n{portal.util.labelModify}"'>
+								<@cIcon name='edit' /><@cInline class='visually-hidden'>#i18n{portal.util.labelModify}</@cInline>
+							</@cBtn>
 						</#if>
 						<#if subscription_dto.removable>
-							<a class="btn btn-danger btn-small" title="#i18n{portal.util.labelDelete}" href="jsp/site/Portal.jsp?page=subscribe&action=confirmRemoveSubscription&idSubscription=${subscription_dto.idSubscription}">
-								<i class="icon-trash icon-white">&nbsp;</i>
-							</a>
+							<#assign removeUrl = 'jsp/site/Portal.jsp?page=subscribe&action=confirmRemoveSubscription&idSubscription=' + subscription_dto.idSubscription?c>
+							<@cBtn label='' href=removeUrl class='outline-danger btn-sm' params='title="#i18n{portal.util.labelDelete}"'>
+								<@cIcon name='trash' /><@cInline class='visually-hidden'>#i18n{portal.util.labelDelete}</@cInline>
+							</@cBtn>
 						</#if>
-					</td>
-				</tr>
+					</@cTd>
+				</@cTr>
 			</#list>
-		<#else>
-			#i18n{subscribe.viewSubscription.noSubscription}
-		</#if>
-	</table>
-</div>
+		</@cTbody>
+	</@cTable>
+<#else>
+	<@cEmpty title='#i18n{subscribe.viewSubscription.noSubscription}' subtitle='' />
+</#if>
+</@cContainer>
+</@cTpl>

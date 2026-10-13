@@ -1,6 +1,7 @@
 -- liquibase formatted sql
 -- changeset subscribe:create_db_subscribe.sql
 -- preconditions onFail:MARK_RAN onError:WARN
+-- precondition-sql-check expectedResult:1 SELECT COUNT(*) FROM subscribe_subscription WHERE 1 = 0
 
 --
 -- Structure for table subscribe_subscription
