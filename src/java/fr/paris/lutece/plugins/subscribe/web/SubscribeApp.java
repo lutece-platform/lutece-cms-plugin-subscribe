@@ -43,6 +43,7 @@ import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.message.SiteMessageService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.SecurityService;
+import fr.paris.lutece.portal.service.security.UserNotSignedException;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPathService;
@@ -121,10 +122,17 @@ public class SubscribeApp extends MVCApplication
      * @param request
      *            The request
      * @return The XPage to display
+     * @throws UserNotSignedException
+     *             If the authentication is enabled and the user has not signed in
      */
     @View( value = VIEW_SUBSCRIPTION_LIST, defaultView = true )
-    public XPage getViewSubscriptionList( HttpServletRequest request )
+    public XPage getViewSubscriptionList( HttpServletRequest request ) throws UserNotSignedException
     {
+        if ( SecurityService.isAuthenticationEnable( ) && ( SecurityService.getInstance( ).getRegisteredUser( request ) == null ) )
+        {
+            throw new UserNotSignedException( );
+        }
+
         XPage xpage = getXPage( );
         xpage.setContent( getSubscriptionList( request ) );
         return xpage;
