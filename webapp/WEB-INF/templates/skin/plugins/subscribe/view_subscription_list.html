@@ -20,10 +20,14 @@
 							</@cBtn>
 						</#if>
 						<#if subscription_dto.removable>
-							<#assign removeUrl = 'jsp/site/Portal.jsp?page=subscribe&action=confirmRemoveSubscription&idSubscription=' + subscription_dto.idSubscription?c>
-							<@cBtn label='' href=removeUrl class='outline-danger btn-sm' params='title="#i18n{portal.util.labelDelete}"'>
-								<@cIcon name='trash' /><@cInline class='visually-hidden'>#i18n{portal.util.labelDelete}</@cInline>
-							</@cBtn>
+							<@cForm action='jsp/site/Portal.jsp?page=subscribe' class='d-inline'>
+								<input type="hidden" name="_csrftoken" value="${_csrftoken!}">
+								<input type="hidden" name="action" value="confirmRemoveSubscription">
+								<input type="hidden" name="idSubscription" value="${subscription_dto.idSubscription?c}">
+								<@cBtn label='' type='submit' class='outline-danger btn-sm' params='title="#i18n{portal.util.labelDelete}"'>
+									<@cIcon name='trash' /><@cInline class='visually-hidden'>#i18n{portal.util.labelDelete}</@cInline>
+								</@cBtn>
+							</@cForm>
 						</#if>
 					</@cTd>
 				</@cTr>

@@ -41,6 +41,8 @@ import fr.paris.lutece.plugins.subscribe.service.SubscriptionService;
 import fr.paris.lutece.portal.service.message.SiteMessage;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.message.SiteMessageService;
+import fr.paris.lutece.portal.service.security.ISecurityTokenService;
+import fr.paris.lutece.portal.service.security.SecurityTokenHandler;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.SecurityService;
 import fr.paris.lutece.portal.service.security.UserNotSignedException;
@@ -173,6 +175,7 @@ public class SubscribeApp extends MVCApplication
 
                 Map<String, Object> model = new HashMap<>( );
                 model.put( MARK_LIST_SUBSCRIPTION_DTO, listSubscriptionDto );
+                model.put( SecurityTokenHandler.MARK_CSRF_TOKEN, getRemoveToken( request ) );
 
                 HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_SUBSCRIPTION, getStaticLocale( request ), model );
 
@@ -180,6 +183,18 @@ public class SubscribeApp extends MVCApplication
             }
         }
         return StringUtils.EMPTY;
+    }
+
+    /**
+     * Get a new security token for the removal of a subscription
+     *
+     * @param request
+     *            The request
+     * @return The token
+     */
+    private static String getRemoveToken( HttpServletRequest request )
+    {
+        return CDI.current( ).select( ISecurityTokenService.class ).get( ).getToken( request, ACTION_DO_REMOVE_URL );
     }
 
     /**
@@ -198,6 +213,7 @@ public class SubscribeApp extends MVCApplication
         UrlItem urlItem = new UrlItem( PATH_PORTAL + getActionUrl( ACTION_DO_REMOVE_URL ) );
         urlItem.addParameter( PARAMETER_ID_SUBSCRIPTION, request.getParameter( PARAMETER_ID_SUBSCRIPTION ) );
         Map<String, Object> requestParameters = new HashMap<>( );
+        requestParameters.put( SecurityTokenHandler.MARK_CSRF_TOKEN, getRemoveToken( request ) );
 
         if ( StringUtils.isNotBlank( strReferer ) && _bEncodeFromUrl )
         {
